@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">Pro 9i Control monitor and power bolt icon</title>
+  <desc id="desc">A dark monitor with a blue display, white window panes, and a golden power bolt.</desc>
+  <defs>
+    <linearGradient id="screen" x1="0" y1="0" x2="0.88" y2="1">
+      <stop offset="0" stop-color="#4D8CFF"/>
+      <stop offset="0.56" stop-color="#356AE6"/>
+      <stop offset="1" stop-color="#1F4FB8"/>
+    </linearGradient>
+    <linearGradient id="bezel" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#171D29"/>
+      <stop offset="1" stop-color="#0C111A"/>
+    </linearGradient>
+    <linearGradient id="bolt" x1="0" y1="0" x2="0.9" y2="1">
+      <stop offset="0" stop-color="#FFE681"/>
+      <stop offset="1" stop-color="#FFB629"/>
+    </linearGradient>
+  </defs>
+
+  <rect x="40" y="62" width="432" height="304" rx="48" fill="url(#bezel)"/>
+  <rect x="64" y="86" width="384" height="256" rx="28" fill="url(#screen)"/>
+
+  <g fill="#FFFFFF">
+    <rect x="130" y="146" width="62" height="62" rx="9"/>
+    <rect x="202" y="146" width="62" height="62" rx="9"/>
+    <rect x="130" y="218" width="62" height="62" rx="9"/>
+    <rect x="202" y="218" width="62" height="62" rx="9"/>
+  </g>
+
+  <path d="M342 123 282 225h50l-24 94 86-126h-54l38-70Z" fill="url(#bolt)" stroke="#FFF4C5" stroke-width="6" stroke-linejoin="round"/>
+
+  <path d="M224 366h64v48h-64z" fill="#0C111A"/>
+  <rect x="152" y="408" width="208" height="40" rx="20" fill="#0C111A"/>
+</svg>

@@ -1,0 +1,103 @@
+.slider-container {
+  position: relative;
+  width: 100%;
+  padding-right: 4px;
+}
+
+.slider-dots {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+}
+
+.slider-sticky-dot {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--icon-muted);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08);
+}
+
+.slider-sticky-dot.recommended {
+  width: 8px;
+  height: 8px;
+  background: var(--accent);
+}
+
+.slider-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  pointer-events: none;
+  z-index: 1;
+  height: 26px;
+  width: 100%;
+  margin: 2px 0 2px 6px;
+}
+
+.slider-overlay > svg {
+  color: var(--slider-icon);
+  fill: var(--slider-icon);
+}
+
+.slider-label {
+  color: var(--text-primary);
+  font-size: 14px;
+}
+
+.slider {
+  appearance: none;
+  width: 100%;
+  height: 26px;
+  padding: 0;
+  border-radius: 13px;
+  border: 1px solid var(--panel-border-strong);
+  background: linear-gradient(to right, var(--slider-fill) 0%, var(--slider-fill) var(--slider-progress, 50%), var(--slider-track) var(--slider-progress, 50%), var(--slider-track) 100%);
+  cursor: pointer;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), inset 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.slider::-webkit-slider-thumb {
+  cursor: pointer;
+  appearance: none;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  background: var(--thumb-bg);
+  border: 1px solid var(--thumb-border);
+  box-shadow: -2px 2px 4px rgba(0, 0, 0, 0.15), -1px 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.slider::-moz-range-thumb {
+  cursor: pointer;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  background: var(--thumb-bg);
+  border: 1px solid var(--thumb-border);
+  box-shadow: -2px 2px 4px rgba(0, 0, 0, 0.15), -1px 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.slider:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.slider:disabled::-webkit-slider-thumb {
+  cursor: not-allowed;
+}
+
+.slider:disabled::-moz-range-thumb {
+  cursor: not-allowed;
+}

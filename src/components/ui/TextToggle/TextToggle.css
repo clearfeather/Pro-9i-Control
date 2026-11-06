@@ -1,0 +1,98 @@
+.text-toggle {
+    border: 0;
+    background: transparent;
+    font-family: inherit;
+    text-align: left;
+    font-size: 16px;
+    display: flex;
+    width: 100%;
+    gap: 16px;
+    line-height: 36px;
+    height: 36px;
+    align-items: center;
+    cursor: pointer;
+    padding: 4px 14px;
+    border-radius: 8px;
+    font-weight: 400;
+    color: var(--text-primary);
+}
+
+.text-toggle:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+}
+
+.text-toggle:hover, .text-toggle.loading {
+    background-color: var(--panel-bg-soft);
+}
+
+.text-toggle .icon {
+    background-color: var(--toggle-icon-bg);
+    border-radius: 50%;
+    padding: 5px;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.text-toggle .icon svg,
+.text-toggle .text,
+.text-toggle .icon svg {
+    color: var(--toggle-icon-color);
+    fill: var(--toggle-icon-color);
+}
+
+/* Variant: no rounded background behind the icon */
+.text-toggle.no-icon-bg .icon {
+    background-color: transparent;
+    border-radius: 0;
+    padding: 0;
+}
+
+.text-toggle .text {
+    flex-grow: 1;
+}
+
+.text-toggle > svg,
+.text-toggle > svg {
+    color: var(--toggle-icon-color);
+    fill: var(--toggle-icon-color);
+}
+
+.text-toggle:hover .icon {
+    background-color: var(--toggle-icon-hover);
+}
+
+.text-toggle.toggled .icon {
+    background-color: var(--toggle-icon-active);
+}
+
+/* Ensure no background on hover/toggled when no-icon-bg is set */
+.text-toggle.no-icon-bg:hover .icon,
+.text-toggle.no-icon-bg.toggled .icon {
+    background-color: transparent;
+}
+
+.text-toggle:not(.no-icon-bg).toggled .icon svg {
+    color: var(--toggle-icon-active-color);
+    fill: var(--toggle-icon-active-color);
+}
+
+.text-toggle.disabled {
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+/* Loading animation: scale pulse */
+.text-toggle.loading .icon svg {
+    animation: tt-pulse 0.9s ease-in-out infinite both;
+    transform-origin: 50% 50%;
+}
+
+@keyframes tt-pulse {
+    0% { transform: scale(1) rotate(0deg); }
+    50% { transform: scale(0.9) rotate(-10deg); }
+    100% { transform: scale(1) rotate(0deg); }
+}

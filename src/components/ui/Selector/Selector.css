@@ -1,0 +1,57 @@
+.selector {
+  position: relative;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  gap: 0;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--border);
+  overflow: hidden;
+}
+
+.selector:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--focus-ring);
+}
+
+.selector-disabled {
+  opacity: 0.6;
+}
+
+.selector-segment {
+  background: transparent;
+  border: none;
+  padding: 7px 8px 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  min-height: 30px;
+  font-size: 11px;
+  font-weight: 600;
+  position: relative;
+  z-index: 1;
+  color: var(--text-primary);
+}
+
+.selector-segment:disabled {
+  cursor: not-allowed;
+}
+
+.segment-label {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.selector-indicator {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 2px;
+  background: var(--accent);
+  transition: transform 150ms ease, width 150ms ease;
+  will-change: transform;
+}
