@@ -6,6 +6,9 @@ It is a personal-use customization of
 [WinDisplay](https://github.com/zpix1/windisplay), maintained by
 [@clearfeather](https://github.com/clearfeather).
 
+**Download v0.5.2:** [Windows x64 installer](https://github.com/clearfeather/Pro-9i-Control/releases/download/v0.5.2/Pro_9i_Control_0.5.2_x64-setup.exe)
+or [portable ZIP, source, and checksums](https://github.com/clearfeather/Pro-9i-Control/releases/tag/v0.5.2).
+
 <img src="images/pro-9i-control.png" alt="Pro 9i Control showing display, HDR Boost, Lenovo power, charging, USB, and Syncthing controls" width="360" />
 
 **Personal use only — project intent:** this community project is intended for
