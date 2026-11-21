@@ -6,8 +6,8 @@ It is a personal-use customization of
 [WinDisplay](https://github.com/zpix1/windisplay), maintained by
 [@clearfeather](https://github.com/clearfeather).
 
-**Download v0.6.1:** [Windows x64 installer](https://github.com/clearfeather/Pro-9i-Control/releases/download/v0.6.1/Pro_9i_Control_0.6.1_x64-setup.exe)
-or [portable ZIP, source, and checksums](https://github.com/clearfeather/Pro-9i-Control/releases/tag/v0.6.1).
+**Download v0.6.2:** [Windows x64 installer](https://github.com/clearfeather/Pro-9i-Control/releases/download/v0.6.2/Pro_9i_Control_0.6.2_x64-setup.exe)
+or [portable ZIP, source, and checksums](https://github.com/clearfeather/Pro-9i-Control/releases/tag/v0.6.2).
 
 <img src="images/pro-9i-control.png" alt="Pro 9i Control showing display, HDR Boost, Lenovo power, charging, USB, and Syncthing controls" width="360" />
 
@@ -28,7 +28,7 @@ panel. External displays and other laptops do not automatically gain that featur
 ## Features
 
 - Select a supported refresh rate for the display's current resolution.
-- Optional native 48Hz and 120Hz panel setup for the reviewed Lenovo 83BV / CSO1418 configuration, bundled with the app and opened from **About > 48/120 Hz panel setup**. See the [setup and recovery guide](tools/panel-setup/README.txt).
+- Optional native 48Hz and 120Hz panel modes for movie watching and frame sync, offered during installation on the reviewed Lenovo 83BV / CSO1418 configuration. See the [setup and recovery guide](tools/panel-setup/README.txt).
 - Switch a compatible display between SDR and HDR.
 - Apply HDR desktop boost at 60 Hz, restoring the previous HDR and refresh rate when stopped.
 - Switch supported Lenovo laptops between Power Save, Balanced, and Performance modes.
@@ -44,10 +44,16 @@ between Light and Dark appearance modes.
 
 ## Optional native 48/120Hz panel setup
 
-The installer and portable ZIP include the same panel setup tool and guide.
-Open **About > 48/120 Hz panel setup** to find them. Installation and app updates
-leave Windows display settings unchanged; the setup tool is read-only unless
-you explicitly run `Setup-PanelModes.ps1 -Install` as administrator.
+The installer asks whether to add **48Hz and 120Hz panel modes** on a supported
+laptop. Choose **Yes** to run the bundled setup and approve Windows' administrator
+request, or **No** to install just the app. Setup explains any requirements that
+need attention. A normal Windows restart makes newly added modes available;
+**restart later** is selected by default. Setup never switches your current rate.
+
+Matching modes are preserved without another administrator request. Silent,
+passive, and automatic updates skip panel setup. For portable use or later setup,
+open **About > 48/120 Hz panel setup** and double-click `Install-PanelModes.cmd`;
+it requests administrator access automatically. No separate download is needed.
 
 The setup is limited to the reviewed Lenovo 83BV built-in **CSO1418 /
 MNE507HZ2-1** panel and matching factory timing/HDR metadata. It adds native

@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.6.2] - 2026-11-20
+
+- Offer optional 48Hz and 120Hz panel modes during installation, useful for movie watching and frame sync. Setup checks compatibility, requests administrator access only when needed, and offers a restart afterward.
+- Skip the offer when both modes are already installed or the panel is unsupported. Silent, passive, and automatic updates never install panel modes or prompt for them.
+- Keep the existing panel checks, backups, factory modes, and targeted removal. The portable setup launcher now requests administrator access automatically.
+
 ## [0.6.1] - 2026-11-20
 
 - Add native 48Hz to the optional panel setup alongside 120Hz, preserving the factory 60/165Hz modes and existing 120Hz timing. Recognize and upgrade the owned earlier 120-only override without replacing unrelated display data.

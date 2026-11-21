@@ -5,6 +5,7 @@ param(
     [Parameter(ParameterSetName='Remove',Mandatory=$true)][switch]$Remove
 )
 $ErrorActionPreference='Stop'
+try {
 . (Join-Path $PSScriptRoot 'PanelModes.ps1')
 
 function Assert-Administrator {
@@ -64,7 +65,7 @@ if($Remove) {
 if($env:OS-ne 'Windows_NT'-or ![Environment]::Is64BitProcess){throw 'Use 64-bit Windows PowerShell on Windows.'}
 if($Install){Assert-Administrator}
 $computer=Get-CimInstance Win32_ComputerSystem
-if($computer.Manufacturer-notlike '*LENOVO*'-or $computer.Model-notlike '83BV*'){throw '120Hz setup is limited to the reviewed Lenovo 83BV / CSO1418 configuration.'}
+if($computer.Manufacturer-notlike '*LENOVO*'-or $computer.Model-notlike '83BV*'){throw '48/120Hz setup is limited to the reviewed Lenovo 83BV / CSO1418 configuration.'}
 Add-Type -Path (Join-Path $PSScriptRoot 'DisplayReadOnly.cs')
 $snapshot=[Pro9i120Display]::ReadActive()
 $panels=@($snapshot.active|Where-Object {$_.devicePath-like '*DISPLAY#CSO1418#*'-and $_.path.target.technology-eq 2147483648})
@@ -106,3 +107,7 @@ try {
         Write-Output "Local backup: $backup"
     }
 } finally {$parent.Dispose()}
+} catch {
+    [Console]::Error.WriteLine($_.Exception.Message)
+    exit 1
+}

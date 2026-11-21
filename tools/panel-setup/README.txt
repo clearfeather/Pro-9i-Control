@@ -1,8 +1,16 @@
 Pro 9i Control - optional native 48 Hz and 120 Hz panel setup
 
 This folder is included with the installed app and the complete portable ZIP.
-Open it from About > 48/120 Hz panel setup. The button only opens this folder;
-installing or updating Pro 9i Control does not change display settings.
+The installer offers to add the modes on a supported laptop. Choose Yes to run
+setup and approve Windows' administrator request, or No to install just the app.
+The prompt defaults to No. A normal restart makes newly added modes available;
+restart later is selected by default. The current refresh rate is not changed.
+Already installed modes are preserved without another administrator request.
+Silent, passive, and automatic updates skip panel setup.
+
+For portable use or later setup, open About > 48/120 Hz panel setup to find
+this folder. Double-click Install-PanelModes.cmd; it requests administrator
+access automatically. The About button only opens this folder.
 
 SUPPORTED CONFIGURATION
 Lenovo Yoga/Slim Pro 9i 14IRP8, machine type 83BV, built-in CSOT MNE507HZ2-1
@@ -34,14 +42,16 @@ The output distinguishes the older 120-only override from the combined
 48/120 Hz override. Run the install command to upgrade the owned 120-only
 setup; it preserves the existing 120 Hz timing. A combined setup is unchanged.
 
-INSTALL - EXPLICIT ADMINISTRATOR ACTION
+INSTALL - FROM SETUP OR THE PORTABLE LAUNCHER
 1. Connect the laptop charger and an external display in Extend mode.
 2. Select native 3072 x 1920 at factory 60 Hz or 165 Hz, with HDR off.
    The previously validated 120 Hz mode is also accepted for an upgrade.
 3. Exit Pro 9i Control before changing its panel setup.
-4. Right-click Install-PanelModes.cmd and choose Run as administrator. Alternatively,
-   open 64-bit Windows PowerShell as administrator, navigate to this folder,
-   and run:
+4. Choose Yes when the app installer offers the panel modes, then approve the
+   Windows administrator request. For portable or later setup, double-click
+   Install-PanelModes.cmd instead. If setup reports a missing requirement,
+   prepare the laptop and run the installer or launcher again.
+   Alternatively, open 64-bit Windows PowerShell as administrator and run:
 
     .\Setup-PanelModes.ps1 -Install
 
