@@ -2,7 +2,7 @@
   "$schema": "https://schema.tauri.app/config/2",
   "productName": "Pro 9i Control",
   "mainBinaryName": "HZHDR",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "identifier": "app.hzhdr.desktop",
   "build": {
     "beforeDevCommand": "pnpm run dev",
@@ -31,7 +31,7 @@
   "bundle": {
     "active": true,
     "resources": {
-      "../tools/120hz/": "120hz/"
+      "../tools/panel-setup/": "panel-setup/"
     },
     "targets": "nsis",
     "createUpdaterArtifacts": false,

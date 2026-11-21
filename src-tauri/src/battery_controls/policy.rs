@@ -216,8 +216,8 @@ mod tests {
                 Ok(self.value.get())
             }
         }
-        fn target(&self, _: &u32) -> u32 {
-            60
+        fn target(&self, current: &u32) -> u32 {
+            (*current).min(60)
         }
         fn apply(&self, value: &u32) -> Result<(), String> {
             if self.fail.replace(false) {
@@ -251,14 +251,16 @@ mod tests {
 
     #[test]
     fn already_saving_power_is_not_owned_or_changed_on_ac() {
-        let hardware = Hardware::new(60);
-        let mut control = Control::new(SavedControl::default());
-        control.observe_power(PowerSource::Battery);
-        control.reconcile(&hardware, &save, false).unwrap();
-        assert!(control.saved.restore.is_none());
-        control.observe_power(PowerSource::Ac);
-        control.reconcile(&hardware, &save, false).unwrap();
-        assert!(hardware.writes.borrow().is_empty());
+        for preferred_hz in [48, 60] {
+            let hardware = Hardware::new(preferred_hz);
+            let mut control = Control::new(SavedControl::default());
+            control.observe_power(PowerSource::Battery);
+            control.reconcile(&hardware, &save, false).unwrap();
+            assert!(control.saved.restore.is_none());
+            control.observe_power(PowerSource::Ac);
+            control.reconcile(&hardware, &save, false).unwrap();
+            assert!(hardware.writes.borrow().is_empty());
+        }
     }
 
     #[test]

@@ -6,8 +6,8 @@ It is a personal-use customization of
 [WinDisplay](https://github.com/zpix1/windisplay), maintained by
 [@clearfeather](https://github.com/clearfeather).
 
-**Download v0.6.0:** [Windows x64 installer](https://github.com/clearfeather/Pro-9i-Control/releases/download/v0.6.0/Pro_9i_Control_0.6.0_x64-setup.exe)
-or [portable ZIP, source, and checksums](https://github.com/clearfeather/Pro-9i-Control/releases/tag/v0.6.0).
+**Download v0.6.1:** [Windows x64 installer](https://github.com/clearfeather/Pro-9i-Control/releases/download/v0.6.1/Pro_9i_Control_0.6.1_x64-setup.exe)
+or [portable ZIP, source, and checksums](https://github.com/clearfeather/Pro-9i-Control/releases/tag/v0.6.1).
 
 <img src="images/pro-9i-control.png" alt="Pro 9i Control showing display, HDR Boost, Lenovo power, charging, USB, and Syncthing controls" width="360" />
 
@@ -28,40 +28,42 @@ panel. External displays and other laptops do not automatically gain that featur
 ## Features
 
 - Select a supported refresh rate for the display's current resolution.
-- Optional native 120Hz panel setup for the reviewed Lenovo 83BV / CSO1418 configuration, bundled with the app and opened from **About > 120 Hz panel setup**. See the [setup and recovery guide](tools/120hz/README.txt).
+- Optional native 48Hz and 120Hz panel setup for the reviewed Lenovo 83BV / CSO1418 configuration, bundled with the app and opened from **About > 48/120 Hz panel setup**. See the [setup and recovery guide](tools/panel-setup/README.txt).
 - Switch a compatible display between SDR and HDR.
 - Apply HDR desktop boost at 60 Hz, restoring the previous HDR and refresh rate when stopped.
 - Switch supported Lenovo laptops between Power Save, Balanced, and Performance modes.
 - Limit charging to 75–80% with Lenovo Conservation Mode on supported laptops.
 - Toggle Lenovo Always on USB charging on supported laptops.
 - Pause Syncthing scanning and syncing manually or automatically on battery.
-- Optionally switch the built-in screen to 60 Hz and Lenovo power mode to Power Save on battery.
+- Optionally cap the built-in screen at 60 Hz and switch Lenovo power mode to Power Save on battery; a selected 48Hz rate stays at 48Hz.
 - Start automatically with Windows and remain available in the tray.
 - Customize the panel with saved visibility preferences for display and laptop controls.
 
 The interface supports multiple monitors and can switch Windows and the app
 between Light and Dark appearance modes.
 
-## Optional native 120Hz panel setup
+## Optional native 48/120Hz panel setup
 
 The installer and portable ZIP include the same panel setup tool and guide.
-Open **About > 120 Hz panel setup** to find them. Installation and app updates
+Open **About > 48/120 Hz panel setup** to find them. Installation and app updates
 leave Windows display settings unchanged; the setup tool is read-only unless
-you explicitly run `Setup-120Hz.ps1 -Install` as administrator.
+you explicitly run `Setup-PanelModes.ps1 -Install` as administrator.
 
 The setup is limited to the reviewed Lenovo 83BV built-in **CSO1418 /
 MNE507HZ2-1** panel and matching factory timing/HDR metadata. It adds native
-**3072x1920 at 120Hz** while preserving factory **60Hz and 165Hz**. Other
+**3072x1920 at 48Hz and 120Hz** while preserving factory **60Hz and 165Hz**. Other
 panels, incomplete EDIDs, or unrelated overrides are refused. After setup and
-a normal Windows restart, the app lists 120Hz if Windows advertises it.
+a normal Windows restart, the app lists 48Hz and 120Hz if Windows advertises them.
 
-Native SDR/120 and HDR/120, battery 120->60->120 restoration, and HDR Boost
-restoration were verified on the test laptop. The setup remains experimental:
-camera sequences showed no obvious gaps, but browser stutter prevented a
-definitive synchronized frame-delivery certification. Compatibility with
-other units or drivers is not established.
+Native SDR/48, HDR/48, SDR/120 and HDR/120 timing, battery 120->60->120
+restoration, and HDR Boost restoration were verified on the test laptop.
+Brave initially reported a misleading 60fps/60Hz with the external 60Hz
+monitor connected; on the built-in display alone it reached matching
+48fps/48Hz and 120fps/120Hz with READY. Use a single display for browser
+frame-rate checks. Camera frame-delivery certification remains provisional;
+compatibility with other units or drivers is not established.
 
-Read the bundled [setup and recovery guide](tools/120hz/README.txt) before
+Read the bundled [setup and recovery guide](tools/panel-setup/README.txt) before
 installing. It describes the external-display recovery requirement, local
 backups, HDR ordering, and targeted removal including Safe Mode recovery.
 The Windows override persists independently of the app; remove it explicitly
@@ -108,7 +110,7 @@ follows the capability and current state reported by the laptop firmware.
 Refresh rate and Power mode each have an independent checkbox, enabled by
 default, matching the Syncthing battery option:
 
-- **60 Hz on battery** changes only the built-in laptop screen's refresh rate.
+- **Up to 60 Hz on battery** changes only the built-in laptop screen's refresh rate. A selected 48Hz rate is retained; higher rates are reduced to 60Hz.
 - **Power Save on battery** selects the Lenovo Power Save mode.
 
 When plugged in, each control restores the setting it changed. A manual choice
@@ -181,8 +183,8 @@ From the project folder, run:
 
 The script creates:
 
-- `release\Pro_9i_Control_0.6.0_x64-setup.exe` — recommended NSIS installer.
-- `release\Pro_9i_Control_0.6.0_windows_x64_portable.zip` — portable executable, panel setup folder, documentation, and notices.
+- `release\Pro_9i_Control_0.6.1_x64-setup.exe` — recommended NSIS installer.
+- `release\Pro_9i_Control_0.6.1_windows_x64_portable.zip` — portable executable, panel setup folder, documentation, and notices.
 
 The portable build requires Microsoft Edge WebView2 on the target computer.
 Modern Windows 10 and Windows 11 systems normally already include it.

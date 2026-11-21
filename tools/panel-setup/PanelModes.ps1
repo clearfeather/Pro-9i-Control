@@ -23,7 +23,7 @@ function Assert-EdidChecksums([byte[]]$Bytes) {
     if($Bytes[126]+1-ne $Bytes.Length/128){throw 'EDID extension count does not match its length.'}
 }
 
-function Get-Factory120Edid([byte[]]$Bytes) {
+function Get-FactoryPanelEdid([byte[]]$Bytes) {
     Assert-EdidChecksums $Bytes
     if([BitConverter]::ToString($Bytes[0..11])-ne '00-FF-FF-FF-FF-FF-FF-00-0E-6F-18-14') {
         throw 'This setup supports only the reviewed CSO1418 panel.'
@@ -44,13 +44,14 @@ function Get-Factory120Edid([byte[]]$Bytes) {
         throw 'Factory timings or HDR metadata differ from the reviewed panel. No override can be installed.'
     }
     if($Bytes.Length-eq 512) {
-        $candidate=New-120HzEdid $factory
-        if((Get-ByteHash $candidate)-ne (Get-ByteHash $Bytes)){throw 'The existing fourth EDID block is not our reviewed 120Hz mode.'}
+        $candidate=New-PanelModesEdid $factory
+        $legacy=New-PanelModesEdid $factory -Legacy120Only
+        if((Get-ByteHash $candidate)-ne (Get-ByteHash $Bytes)-and (Get-ByteHash $legacy)-ne (Get-ByteHash $Bytes)){throw 'The existing fourth EDID block is not one of our reviewed panel mode sets.'}
     }
     return ,$factory
 }
 
-function New-120HzEdid([byte[]]$Factory) {
+function New-PanelModesEdid([byte[]]$Factory,[switch]$Legacy120Only) {
     if($Factory.Length-ne 384){throw 'Generate a candidate from a validated complete factory EDID.'}
     $result=New-Object byte[] 512
     [Array]::Copy($Factory,$result,384)
@@ -65,6 +66,17 @@ function New-120HzEdid([byte[]]$Factory) {
     $added[9]=[byte](($encodedClock-shr 8)-band 255)
     $added[10]=[byte](($encodedClock-shr 16)-band 255)
     $added[11]=[byte]($added[11]-band 127)
+    if(!$Legacy120Only) {
+        # Add 48Hz after the unchanged 120Hz descriptor. Round upward at
+        # the panel's declared 48Hz lower limit: 322.380MHz / 48.001Hz.
+        $added[7]=40
+        [Array]::Copy($Factory,264,$added,28,20)
+        $clock48=32238-1
+        $added[28]=[byte]($clock48-band 255)
+        $added[29]=[byte](($clock48-shr 8)-band 255)
+        $added[30]=[byte](($clock48-shr 16)-band 255)
+        $added[31]=[byte]($added[31]-band 127)
+    }
     $sum=0;for($i=1;$i-lt 126;$i++){$sum+=$added[$i]}
     $added[126]=[byte]((256-($sum%256))%256)
     Set-BlockChecksum $added 0
@@ -74,7 +86,15 @@ function New-120HzEdid([byte[]]$Factory) {
     return ,$result
 }
 
-function Assert-Owned120Override([Microsoft.Win32.RegistryKey]$Key,[byte[]]$Image,[switch]$AllowPartial) {
+function Read-OwnedPanelOverride([Microsoft.Win32.RegistryKey]$Key) {
+    if($Key.SubKeyCount-ne 0-or (($Key.GetValueNames()|Sort-Object)-join ',')-ne '0,1,2,3'){throw 'Existing override has foreign or incomplete data.'}
+    foreach($block in 0..3){if($Key.GetValueKind([string]$block)-ne [Microsoft.Win32.RegistryValueKind]::Binary-or ([byte[]]$Key.GetValue([string]$block)).Length-ne 128){throw 'Existing override has an unexpected block type or length.'}}
+    [byte[]]$image=@(foreach($block in 0..3){$Key.GetValue([string]$block)})
+    $validated=Get-FactoryPanelEdid $image
+    return ,$image
+}
+
+function Assert-OwnedPanelOverride([Microsoft.Win32.RegistryKey]$Key,[byte[]]$Image,[switch]$AllowPartial) {
     $names=@($Key.GetValueNames()|Sort-Object)
     if($Key.SubKeyCount-ne 0-or (!$AllowPartial-and ($names-join ',')-ne '0,1,2,3')){throw 'Existing override has foreign or incomplete data; refusing to change it.'}
     foreach($name in $names) {
@@ -87,33 +107,51 @@ function Assert-Owned120Override([Microsoft.Win32.RegistryKey]$Key,[byte[]]$Imag
     }
 }
 
-function Install-120Override([Microsoft.Win32.RegistryKey]$Parent,[byte[]]$Image) {
+function Install-PanelOverride([Microsoft.Win32.RegistryKey]$Parent,[byte[]]$Image) {
     if($Image.Length-ne 512){throw 'Only a complete four-block candidate can be installed.'}
-    $validated=Get-Factory120Edid $Image
+    $validated=Get-FactoryPanelEdid $Image
     $existing=$Parent.OpenSubKey('EDID_OVERRIDE')
-    if($null-ne $existing){try{Assert-Owned120Override $existing $Image}finally{$existing.Dispose()};return 'Already installed; no registry changes.'}
+    if($null-ne $existing){
+        try{$previous=Read-OwnedPanelOverride $existing}finally{$existing.Dispose()}
+        if((Get-ByteHash $previous)-eq (Get-ByteHash $Image)){return 'Already installed; no registry changes.'}
+        $factory=Get-FactoryPanelEdid $previous
+        $legacy=New-PanelModesEdid $factory -Legacy120Only
+        $upgraded=New-PanelModesEdid $factory
+        if((Get-ByteHash $previous)-ne (Get-ByteHash $legacy)-or (Get-ByteHash $Image)-ne (Get-ByteHash $upgraded)){throw 'Only the reviewed 120Hz-to-48/120Hz upgrade is allowed.'}
+        $key=$Parent.OpenSubKey('EDID_OVERRIDE',$true)
+        try {
+            Assert-OwnedPanelOverride $key $previous
+            $key.SetValue('3',[byte[]]$Image[384..511],[Microsoft.Win32.RegistryValueKind]::Binary)
+            $key.Flush();Assert-OwnedPanelOverride $key $Image
+        } catch {
+            $writeError=$_
+            if((Get-ByteHash ([byte[]]$key.GetValue('3')))-eq (Get-ByteHash ([byte[]]$Image[384..511]))){$key.SetValue('3',[byte[]]$previous[384..511],[Microsoft.Win32.RegistryValueKind]::Binary);$key.Flush()}
+            throw $writeError
+        } finally {$key.Dispose()}
+        return 'Added 48Hz to the owned 120Hz override; factory and 120Hz bytes preserved. Restart Windows.'
+    }
     $key=$Parent.CreateSubKey('EDID_OVERRIDE',$true)
     try {
         foreach($block in 0..3){$offset=$block*128;$key.SetValue([string]$block,[byte[]]$Image[$offset..($offset+127)],[Microsoft.Win32.RegistryValueKind]::Binary)}
-        $key.Flush();Assert-Owned120Override $key $Image
+        $key.Flush();Assert-OwnedPanelOverride $key $Image
     } catch {
         $writeError=$_
         $key.Dispose();$key=$null
         # Remove only bytes belonging to this failed write; never foreign data.
-        Remove-120Override $Parent $Image -AllowPartial|Out-Null
+        Remove-PanelOverride $Parent $Image -AllowPartial|Out-Null
         throw $writeError
     } finally {if($null-ne $key){$key.Dispose()}}
-    return 'Installed and verified four contiguous EDID blocks. Restart Windows before selecting 120Hz.'
+    return 'Installed and verified four contiguous EDID blocks. Restart Windows before selecting 48Hz or 120Hz.'
 }
 
-function Remove-120Override([Microsoft.Win32.RegistryKey]$Parent,[byte[]]$Image,[switch]$AllowPartial) {
+function Remove-PanelOverride([Microsoft.Win32.RegistryKey]$Parent,[byte[]]$Image,[switch]$AllowPartial) {
     if($Image.Length-ne 512){throw 'Only a complete four-block candidate can establish override ownership.'}
-    $validated=Get-Factory120Edid $Image
+    $validated=Get-FactoryPanelEdid $Image
     $key=$Parent.OpenSubKey('EDID_OVERRIDE')
     if($null-eq $key){return 'Already absent; no registry changes.'}
-    try{Assert-Owned120Override $key $Image -AllowPartial:$AllowPartial}finally{$key.Dispose()}
+    try{Assert-OwnedPanelOverride $key $Image -AllowPartial:$AllowPartial}finally{$key.Dispose()}
     $Parent.DeleteSubKey('EDID_OVERRIDE',$false);$Parent.Flush()
     $remaining=$Parent.OpenSubKey('EDID_OVERRIDE')
     if($null-ne $remaining){$remaining.Dispose();throw 'Targeted override removal did not verify.'}
-    return 'Removed only the matching 120Hz override. Restart Windows to reload factory modes.'
+    return 'Removed only the matching panel mode override. Restart Windows to reload factory modes.'
 }

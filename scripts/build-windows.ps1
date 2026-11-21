@@ -58,7 +58,7 @@ try {
   $portableDirectory = Join-Path $releaseDirectory ("portable-stage-" + [Guid]::NewGuid().ToString("N"))
   New-Item -ItemType Directory -Path $portableDirectory -Force | Out-Null
   Copy-Item -LiteralPath $binaryPath -Destination $portableDirectory
-  Copy-Item -LiteralPath (Join-Path $projectRoot "tools\120hz") -Destination (Join-Path $portableDirectory "120hz") -Recurse
+  Copy-Item -LiteralPath (Join-Path $projectRoot "tools\panel-setup") -Destination (Join-Path $portableDirectory "panel-setup") -Recurse
   foreach ($document in @("README.md", "LICENSE.md", "THIRD_PARTY_NOTICES.md", "CHANGELOG.md", "HDR_BOOST.md")) {
     Copy-Item -LiteralPath (Join-Path $projectRoot $document) -Destination $portableDirectory
   }

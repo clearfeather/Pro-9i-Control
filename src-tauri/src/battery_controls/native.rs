@@ -55,6 +55,9 @@ impl Setting<RefreshValue> for RefreshSetting {
     }
 
     fn target(&self, current: &RefreshValue) -> RefreshValue {
+        if current.hz().is_some_and(|hz| hz <= 60) {
+            return current.clone();
+        }
         RefreshValue {
             device_path: current.device_path.clone(),
             numerator: 60,
@@ -118,6 +121,17 @@ pub fn manual_refresh(
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn battery_refresh_cap_keeps_an_existing_48hz_choice() {
+        let current = RefreshValue {
+            device_path: "panel-one".into(),
+            numerator: 32238000,
+            denominator: 671609,
+        };
+        let target = RefreshSetting.target(&current);
+        assert_eq!((target.numerator, target.denominator), (32238000, 671609));
+    }
 
     #[test]
     fn refresh_ownership_uses_panel_identity_and_nominal_hz_but_keeps_exact_saved_timing() {

@@ -119,7 +119,7 @@ export function RefreshRateSlider({
         )}
       </div>
       {builtIn && batteryControls && (
-        <BatteryCheckbox label="60 Hz on battery · restore when plugged in"
+        <BatteryCheckbox label="Up to 60 Hz on battery · restore when plugged in"
           checked={batteryControls.status?.refreshRate.enabled ?? true}
           disabled={!batteryControls.status?.supported || batteryControls.busy !== null || busy}
           message={batteryControlMessage(batteryControls.status?.refreshRate)}

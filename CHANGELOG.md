@@ -2,7 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
-## [0.6.0] - 2026-11-20
+## [0.6.1] - 2026-11-20
+
+- Add native 48Hz to the optional panel setup alongside 120Hz, preserving the factory 60/165Hz modes and existing 120Hz timing. Recognize and upgrade the owned earlier 120-only override without replacing unrelated display data.
+- Verify native SDR/48 and HDR/48 timing through Windows and Intel, with stable appearance confirmed by the user and automatic restoration to factory SDR/165Hz.
+- Preserve a selected 48Hz rate on battery; the automatic refresh setting now caps higher rates at 60Hz and restores the previous rate on AC.
+- Document the observed mixed-monitor TestUFO timing mismatch and use the built-in display alone for browser frame-rate validation.
+
+## [0.6.0] - 2026-11-20 (unpublished draft)
 
 - Bundle an optional, hardware-checked native 3072x1920/120Hz panel setup for the reviewed Lenovo 83BV / CSO1418 configuration, accessible from About in both installed and portable builds.
 - Preserve factory 60/165Hz modes and HDR metadata, save local backups, refuse unrelated overrides, and provide targeted removal that also works in Safe Mode. Installation is explicit and never switches modes or restarts drivers automatically.

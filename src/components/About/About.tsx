@@ -60,14 +60,14 @@ export function About() {
             onClick={async () => {
               setSetupError(null);
               try {
-                await openPath(await path.resolveResource("120hz"));
+                await openPath(await path.resolveResource("panel-setup"));
               } catch (error) {
                 console.error("Error opening panel setup files:", error);
                 setSetupError("Could not open panel setup files. Reinstall the app or extract the complete portable ZIP.");
               }
             }}
           >
-            120 Hz panel setup
+            48/120 Hz panel setup
           </button>
         </div>
         {setupError && <div className="about-error" role="alert">{setupError}</div>}
