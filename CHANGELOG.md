@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.6.0] - 2026-11-20
+
+- Bundle an optional, hardware-checked native 3072x1920/120Hz panel setup for the reviewed Lenovo 83BV / CSO1418 configuration, accessible from About in both installed and portable builds.
+- Preserve factory 60/165Hz modes and HDR metadata, save local backups, refuse unrelated overrides, and provide targeted removal that also works in Safe Mode. Installation is explicit and never switches modes or restarts drivers automatically.
+- Show Windows-advertised 60/120/165Hz choices through the existing refresh control. Verify actual battery 120->60->120 restoration and HDR Boost's restoration of the prior 120Hz setting on the test laptop; extend the battery restoration regression to 120Hz.
+- Link About to the maintained Pro 9i Control repository and @clearfeather profile while retaining WinDisplay attribution and displaying LumaLift, set_maxtml, and Syncthing credits.
+- Include the panel setup guide, source link, and third-party notices in portable downloads. The 120Hz setup remains experimental; synchronized camera frame-delivery certification is provisional.
+
 ## [0.5.2] - 2026-11-05
 
 - Synchronize the brightness slider with Windows brightness keys and changes made outside the app using native change notifications and read-only checks while the panel is visible.

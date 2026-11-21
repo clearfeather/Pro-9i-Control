@@ -6,8 +6,8 @@ It is a personal-use customization of
 [WinDisplay](https://github.com/zpix1/windisplay), maintained by
 [@clearfeather](https://github.com/clearfeather).
 
-**Download v0.5.2:** [Windows x64 installer](https://github.com/clearfeather/Pro-9i-Control/releases/download/v0.5.2/Pro_9i_Control_0.5.2_x64-setup.exe)
-or [portable ZIP, source, and checksums](https://github.com/clearfeather/Pro-9i-Control/releases/tag/v0.5.2).
+**Download v0.6.0:** [Windows x64 installer](https://github.com/clearfeather/Pro-9i-Control/releases/download/v0.6.0/Pro_9i_Control_0.6.0_x64-setup.exe)
+or [portable ZIP, source, and checksums](https://github.com/clearfeather/Pro-9i-Control/releases/tag/v0.6.0).
 
 <img src="images/pro-9i-control.png" alt="Pro 9i Control showing display, HDR Boost, Lenovo power, charging, USB, and Syncthing controls" width="360" />
 
@@ -28,6 +28,7 @@ panel. External displays and other laptops do not automatically gain that featur
 ## Features
 
 - Select a supported refresh rate for the display's current resolution.
+- Optional native 120Hz panel setup for the reviewed Lenovo 83BV / CSO1418 configuration, bundled with the app and opened from **About > 120 Hz panel setup**. See the [setup and recovery guide](tools/120hz/README.txt).
 - Switch a compatible display between SDR and HDR.
 - Apply HDR desktop boost at 60 Hz, restoring the previous HDR and refresh rate when stopped.
 - Switch supported Lenovo laptops between Power Save, Balanced, and Performance modes.
@@ -40,6 +41,31 @@ panel. External displays and other laptops do not automatically gain that featur
 
 The interface supports multiple monitors and can switch Windows and the app
 between Light and Dark appearance modes.
+
+## Optional native 120Hz panel setup
+
+The installer and portable ZIP include the same panel setup tool and guide.
+Open **About > 120 Hz panel setup** to find them. Installation and app updates
+leave Windows display settings unchanged; the setup tool is read-only unless
+you explicitly run `Setup-120Hz.ps1 -Install` as administrator.
+
+The setup is limited to the reviewed Lenovo 83BV built-in **CSO1418 /
+MNE507HZ2-1** panel and matching factory timing/HDR metadata. It adds native
+**3072x1920 at 120Hz** while preserving factory **60Hz and 165Hz**. Other
+panels, incomplete EDIDs, or unrelated overrides are refused. After setup and
+a normal Windows restart, the app lists 120Hz if Windows advertises it.
+
+Native SDR/120 and HDR/120, battery 120->60->120 restoration, and HDR Boost
+restoration were verified on the test laptop. The setup remains experimental:
+camera sequences showed no obvious gaps, but browser stutter prevented a
+definitive synchronized frame-delivery certification. Compatibility with
+other units or drivers is not established.
+
+Read the bundled [setup and recovery guide](tools/120hz/README.txt) before
+installing. It describes the external-display recovery requirement, local
+backups, HDR ordering, and targeted removal including Safe Mode recovery.
+The Windows override persists independently of the app; remove it explicitly
+if you want factory-only modes after uninstalling Pro 9i Control.
 
 ## Customize the interface
 
@@ -155,8 +181,8 @@ From the project folder, run:
 
 The script creates:
 
-- `release\Pro_9i_Control_0.5.2_x64-setup.exe` — recommended NSIS installer.
-- `release\Pro_9i_Control_0.5.2_windows_x64_portable.zip` — portable executable.
+- `release\Pro_9i_Control_0.6.0_x64-setup.exe` — recommended NSIS installer.
+- `release\Pro_9i_Control_0.6.0_windows_x64_portable.zip` — portable executable, panel setup folder, documentation, and notices.
 
 The portable build requires Microsoft Edge WebView2 on the target computer.
 Modern Windows 10 and Windows 11 systems normally already include it.

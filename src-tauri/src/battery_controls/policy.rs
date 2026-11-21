@@ -234,17 +234,19 @@ mod tests {
 
     #[test]
     fn battery_switches_to_target_and_ac_restores_original_once() {
-        let hardware = Hardware::new(165);
-        let mut control = Control::new(SavedControl::default());
-        control.observe_power(PowerSource::Battery);
-        assert!(control.reconcile(&hardware, &save, false).unwrap());
-        assert_eq!(hardware.value.get(), 60);
-        control.reconcile(&hardware, &save, false).unwrap();
-        control.observe_power(PowerSource::Ac);
-        control.reconcile(&hardware, &save, false).unwrap();
-        assert_eq!(hardware.value.get(), 165);
-        assert_eq!(*hardware.writes.borrow(), vec![60, 165]);
-        assert!(control.saved.restore.is_none());
+        for preferred_hz in [120, 165] {
+            let hardware = Hardware::new(preferred_hz);
+            let mut control = Control::new(SavedControl::default());
+            control.observe_power(PowerSource::Battery);
+            assert!(control.reconcile(&hardware, &save, false).unwrap());
+            assert_eq!(hardware.value.get(), 60);
+            control.reconcile(&hardware, &save, false).unwrap();
+            control.observe_power(PowerSource::Ac);
+            control.reconcile(&hardware, &save, false).unwrap();
+            assert_eq!(hardware.value.get(), preferred_hz);
+            assert_eq!(*hardware.writes.borrow(), vec![60, preferred_hz]);
+            assert!(control.saved.restore.is_none());
+        }
     }
 
     #[test]

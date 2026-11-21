@@ -55,7 +55,18 @@ try {
   Copy-Item -LiteralPath $installer.FullName -Destination $installerOutput -Force
 
   $zipOutput = Join-Path $releaseDirectory "${artifactName}_${version}_windows_${architecture}_portable.zip"
-  Compress-Archive -LiteralPath $binaryPath -DestinationPath $zipOutput -Force
+  $portableDirectory = Join-Path $releaseDirectory ("portable-stage-" + [Guid]::NewGuid().ToString("N"))
+  New-Item -ItemType Directory -Path $portableDirectory -Force | Out-Null
+  Copy-Item -LiteralPath $binaryPath -Destination $portableDirectory
+  Copy-Item -LiteralPath (Join-Path $projectRoot "tools\120hz") -Destination (Join-Path $portableDirectory "120hz") -Recurse
+  foreach ($document in @("README.md", "LICENSE.md", "THIRD_PARTY_NOTICES.md", "CHANGELOG.md", "HDR_BOOST.md")) {
+    Copy-Item -LiteralPath (Join-Path $projectRoot $document) -Destination $portableDirectory
+  }
+  Copy-Item -LiteralPath (Join-Path $projectRoot "LICENSES") -Destination (Join-Path $portableDirectory "LICENSES") -Recurse
+  Copy-Item -LiteralPath (Join-Path $projectRoot "src-tauri\hdr-boost\LICENSE") -Destination (Join-Path $portableDirectory "LumaLift-LICENSE.txt")
+  "Complete corresponding source: https://github.com/clearfeather/Pro-9i-Control/tree/v$version" |
+    Set-Content -LiteralPath (Join-Path $portableDirectory "SOURCE.txt") -Encoding UTF8
+  Compress-Archive -Path (Join-Path $portableDirectory "*") -DestinationPath $zipOutput -Force
 
   Write-Host ""
   Write-Host "Build complete:" -ForegroundColor Green

@@ -24,6 +24,30 @@
 
 .about-description {
     margin-top: 8px;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.about-maintainer {
+    margin-top: 6px;
+}
+
+.about-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 8px;
+}
+
+.about-error {
+    margin-top: 6px;
+    color: var(--toast-text);
+    font-size: 12px;
+}
+
+.about-credits {
+    margin-top: 12px;
+    font-size: 12px;
 }
 
 a {
